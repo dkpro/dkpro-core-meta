@@ -1,0 +1,180 @@
+<!--
+  Licensed to the Technische Universität Darmstadt under one
+  or more contributor license agreements. See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership. The Technische Universität Darmstadt
+  licenses this file to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.dkpro</groupId>
+    <artifactId>dkpro-parent-pom</artifactId>
+    <version>15</version>
+  </parent>
+  <groupId>org.dkpro.meta</groupId>
+  <artifactId>dkpro-meta</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>DKPro Meta</name>
+  <description>Tools to extract metadata from DKPro Core and process it.</description> <!-- The description tag must be present for antrun to work!! -->
+  <url>https://dkpro.github.io/dkpro-meta/</url>
+  <organization>
+    <name>Ubiquitous Knowledge Processing (UKP) Lab, Technische Universität Darmstadt</name>
+    <url>https://www.ukp.tu-darmstadt.de/</url>
+  </organization>
+  <inceptionYear>2016</inceptionYear>
+  <repositories>
+    <!-- For UIMA/uimaFIT SNAPSHOT -->
+    <repository>
+      <id>apache.snapshots</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://repository.apache.org/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <!-- For DKPro Parent POM SNAPSHOT -->
+    <!--
+      <repository>
+      <id>ukp-oss-snapshots</id>
+      <url>http://zoidberg.ukp.informatik.tu-darmstadt.de/artifactory/public-snapshots</url>
+      <releases>
+      <enabled>false</enabled>
+      </releases>
+      <snapshots>
+      <enabled>true</enabled>
+      </snapshots>
+      </repository>
+    -->
+    <!-- added this to resolve fangorn artifact -->
+  </repositories>
+  <pluginRepositories>
+    <!-- For UIMA/uimaFIT SNAPSHOT maven plugin -->
+    <pluginRepository>
+      <id>apache.snapshots</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://repository.apache.org/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+  <mailingLists>
+    <mailingList>
+      <name>DKPro Core user mailing list</name>
+      <archive>https://groups.google.com/forum/#!forum/dkpro-core-user</archive>
+      <post>dkpro-core-user@googlegroups.com</post>
+      <subscribe>dkpro-core-user+subscribe@googlegroups.com</subscribe>
+      <unsubscribe>dkpro-core-user+unsubscribe@googlegroups.com</unsubscribe>
+    </mailingList>
+    <mailingList>
+      <name>DKPro Core developer mailing list</name>
+      <archive>https://groups.google.com/forum/#!forum/dkpro-core-developers</archive>
+      <post>dkpro-core-developers@googlegroups.com</post>
+      <subscribe>dkpro-core-developers+subscribe@googlegroups.com</subscribe>
+      <unsubscribe>dkpro-core-developers+unsubscribe@googlegroups.com</unsubscribe>
+    </mailingList>
+  </mailingLists>
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/dkpro/dkpro-meta/issues</url>
+  </issueManagement>
+  <scm>
+    <connection>scm:git:git://github.com/dkpro/dkpro-meta</connection>
+    <developerConnection>scm:git:git@github.com:dkpro/dkpro-meta.git</developerConnection>
+    <url>https://github.com/dkpro/dkpro-meta</url>
+  </scm>
+  <properties>
+    <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+    <uima.version>2.9.0</uima.version>
+    <uimafit.version>2.3.0-SNAPSHOT</uimafit.version>
+    <uimafit.plugin.version>2.3.0-SNAPSHOT</uimafit.plugin.version>
+    <!-- The Spring version should be at least whatever uimaFIT requires -->
+    <spring.version>3.2.16.RELEASE</spring.version>
+  </properties>
+  <modules>
+    <module>dkpro-meta-core</module>
+  </modules>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.uima</groupId>
+        <artifactId>uimaj-core</artifactId>
+        <version>${uima.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.uima</groupId>
+        <artifactId>uimaj-json</artifactId>
+        <version>${uima.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.uima</groupId>
+        <artifactId>uimaj-tools</artifactId>
+        <version>${uima.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.uima</groupId>
+        <artifactId>uimaj-cpe</artifactId>
+        <version>${uima.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.uima</groupId>
+        <artifactId>uimaj-document-annotation</artifactId>
+        <version>${uima.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.uima</groupId>
+        <artifactId>uimafit-core</artifactId>
+        <version>${uimafit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.uima</groupId>
+        <artifactId>uimafit-cpe</artifactId>
+        <version>${uimafit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.yaml</groupId>
+        <artifactId>snakeyaml</artifactId>
+        <version>1.17</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.4</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging-api</artifactId>
+        <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.3.2</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>
