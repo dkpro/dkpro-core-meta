@@ -260,9 +260,9 @@ class MetadataAggregator {
                 def buildXml = new XmlSlurper().parse(it);
                 def modelXmls = buildXml.'**'.findAll{ node -> node.name() in [
                     'install-stub-and-upstream-file', 'install-stub-and-upstream-folder',
-                    'install-upstream-file', 'install-upstream-folder' ]};
+                    'install-upstream-file', 'install-upstream-folder', 'install-model-stub' ]};
                 
-                // Extrack package
+                // Extract package
                 def pack = buildXml.'**'.find { it.name() == 'property' && it.@name == 'outputPackage' }.@value as String;
                 if (pack.endsWith('/')) {
                     pack = pack[0..-2];
