@@ -279,7 +279,13 @@ class MetadataAggregator {
                     model.@shortArtifactId = "${shortBase}-model-${model.@tool}-${model.@language}-${model.@variant}" as String;
                     model.@artifactId = "${model.@artifactIdBase}-model-${model.@tool}-${model.@language}-${model.@variant}" as String;
                     model.@package = pack as String;
-                    model.@version = "${model.@upstreamVersion}.${model.@metaDataVersion}" as String;
+                    
+                    if (model.name() in ['install-model-stub']) {
+                        model.@version = "${model.@version}" as String;
+                    }
+                    else {
+                        model.@version = "${model.@upstreamVersion}.${model.@metaDataVersion}" as String;
+                    }
                     
                     def engine = aEngines.values()
                         .findAll { engine ->
