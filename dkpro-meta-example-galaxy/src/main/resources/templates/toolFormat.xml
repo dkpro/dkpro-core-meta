@@ -1,0 +1,81 @@
+<!--
+  Licensed to the Technische Universität Darmstadt under one
+  or more contributor license agreements. See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership. The Technische Universität Darmstadt
+  licenses this file to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<tool xmlns:gsp='http://groovy.codehaus.org/2005/gsp' id="${format.name}"
+	name="${format.name}">
+
+	<gsp:scriptlet>
+		import org.jsoup.Jsoup;
+
+		def html2text(html) {
+		    return html ? Jsoup.parse(html).text() : "";
+		}
+	</gsp:scriptlet>
+	<gsp:scriptlet>
+		def paramDecls;
+		def paramValues;
+		if(type == "reader"){
+			paramDecls = format.readerSpec.metaData.configurationParameterDeclarations.configurationParameters.sort { it.name };
+			paramValues = format.readerSpec.metaData.configurationParameterSettings.parameterSettings;
+		}else {
+			paramDecls = format.writerSpec.metaData.configurationParameterDeclarations.configurationParameters.sort { it.name };
+			paramValues = format.writerSpec.metaData.configurationParameterSettings.parameterSettings;
+		}
+		def typeMap = [
+		'Boolean': 'boolean',
+		'Integer': 'integer',
+		'Float': 'float'
+		];
+		def paramList = [:];
+     	StringBuilder sb = new StringBuilder();
+      	paramDecls.each { param ->
+        def type = typeMap[param.type] ?: 'text';
+        paramList["-"+"${param.name}"]= "\$"+"${param.name}" ;
+        sb.append("-");
+        sb.append("${param.name}");
+        sb.append(" ");
+        sb.append("\$");
+        sb.append("${param.name}");
+        sb.append(" ");
+        }
+	</gsp:scriptlet>
+	<command interpreter="groovy">${format.name}.groovy ${"\"\$input\""} ${"\"\$result\""} ${"\"\$hideOutput\""} ${sb.toString()}</command>
+	<inputs>
+		<param name='input' type='data' label="component" />
+		<gsp:scriptlet>
+
+			paramDecls.each { param ->
+			def type = typeMap[param.type] ?: 'text';
+			def value = paramValues.find { it.name == param.name }?.value;
+		</gsp:scriptlet>
+		<param name="${param.name}" label="${param.name}" type="${type}"
+			optional="${!param.mandatory}" area="${param.multiValued}" value="${value}"
+			help="${html2text(param.description)}">
+		</param>
+		<gsp:scriptlet>
+			}
+		</gsp:scriptlet>
+		<param name='hideOutput' type='boolean' label="hide logging info"
+			checked="true" />
+	</inputs>
+	<outputs>
+		<data name='result' />
+	</outputs>
+	<help> 
+    <![CDATA[${html2text(format.description)}]]>
+	</help>
+</tool>
