@@ -17,14 +17,27 @@
  */
 package org.dkpro.meta.core.model;
 
-public class MetadataModel
+public class EngineModel
 {
-    def typesystems;
-    Map<String, EngineModel> engines;
-    def formats;
-    def models;
-    def tagsets;
-    def inputOutputTypes;
-    def typesystemMappings;
-    def datasets;
+    String name;
+    String implName;
+    String groupId;
+    String artifactId;
+    String version;
+    String module;
+    def pom;
+    def spec;
+    String role;
+    String tool;
+    List models = [];
+    List<String> inputs = [];
+    List<String> outputs = [];
+    List<String> languages = [];
+    List<String> allLanguages = [];
+    
+    @Override
+    public String toString()
+    {
+        return name;
+    }
 }

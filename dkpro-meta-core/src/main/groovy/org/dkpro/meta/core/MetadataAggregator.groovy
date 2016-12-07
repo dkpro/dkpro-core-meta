@@ -17,13 +17,16 @@
  */
 package org.dkpro.meta.core;
 
+import static org.dkpro.meta.vocab.ToolCategories.roleNames;
 import static groovy.io.FileType.FILES;
 import groovy.json.*;
 import groovy.text.XmlTemplateEngine;
 import groovy.transform.Field;
 import groovy.util.XmlParser;
-import org.dkpro.meta.core.maven.ContextHolder;
-import org.dkpro.meta.core.model.MetadataModel;
+import org.dkpro.meta.core.maven.ContextHolder
+import org.dkpro.meta.core.model.EngineModel;
+import org.dkpro.meta.core.model.MetadataModel
+import org.dkpro.meta.vocab.ToolCategories;
 
 import static org.apache.uima.UIMAFramework.getXMLParser;
 import static org.apache.uima.fit.factory.ResourceCreationSpecifierFactory.*;
@@ -37,26 +40,6 @@ import org.apache.uima.util.XMLInputSource;
 import org.yaml.snakeyaml.Yaml;
 
 class MetadataAggregator {
-    def roleNames = [
-        coref:          'Coreference resolver',
-        tagger:         'Part-of-speech tagger',
-        parser:         'Parser',
-        chunker:        'Chunker',
-        segmenter:      'Segmenter',
-        checker:        'Checker',
-        lemmatizer:     'Lemmatizer',
-        srl:            'Semantic role labeler',
-        morph:          'Morphological analyzer',
-        transformer:    'Transformer',
-        stem:           'Stemmer',
-        ner:            'Named Entity Recognizer',
-        langdetect:     'Language Identifier',
-        transcriptor:   'Phonetic Transcriptor',
-        topicmodel:     'Topic Model',
-        embeddings:     'Embeddings',
-        gazeteer:       'Gazeteer',
-        other:          'Other' ];
-    
     def loadTypeSystemMapping(File aDirectory) {
       return new File(aDirectory, "dkpro-core-doc/src/main/script/mappings/typesystemmapping.yaml").withInputStream { 
         new Yaml().load(it) };
@@ -102,14 +85,14 @@ class MetadataAggregator {
             
         switch (baseComponentName) {
         case { 'de.tudarmstadt.ukp.dkpro.core.api.coref.type.CoreferenceChain' in outputs }: 
-            return "coref";
+            return ToolCategories.COREF;
         case { 'de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity' in outputs }: 
-            return "ner";
+            return ToolCategories.NER;
         case { 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.GrammarAnomaly' in outputs ||
                'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly' in outputs }: 
-            return "checker";
+            return ToolCategories.CHECKER;
         case { 'de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.MorphologicalFeatures' in outputs }: 
-            return "morph";
+            return ToolCategories.MORPH;
         case { 'de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemanticArgument' in outputs ||
                'de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemArg' in outputs}: 
             return "srl";
@@ -121,38 +104,38 @@ class MetadataAggregator {
                 it.endsWith("ApplyChangesAnnotator") ||
                 it.endsWith("Backmapper") ||
                 spec.annotatorImplementationName.contains('.textnormalizer.transformation.') }: 
-            return "transformer";
+            return ToolCategories.TRANSFORMER;
         case { it.endsWith("Chunker") }: 
-            return "chunker";
+            return ToolCategories.CHUNKER;
         case { it.endsWith("LanguageIdentifier") || it.contains("LanguageDetector") }: 
-            return "langdetect";
+            return ToolCategories.LANGDETECT;
         case { it.endsWith("NamedEntityRecognizer") }: 
-            return "ner";
+            return ToolCategories.NER;
         case { it.endsWith("Tagger") }: 
-            return "tagger";
+            return ToolCategories.TAGGER;
         case { it.endsWith("Parser") }: 
-            return "parser";
+            return ToolCategories.PARSER;
         case { 
                 it.endsWith("Segmenter") || 
                 it.endsWith("Tokenizer") ||
                 it.endsWith("Sentence") ||
                 it.endsWith("Token") ||
                 spec.annotatorImplementationName.contains('.tokit.')}: 
-            return "segmenter";
+            return ToolCategories.SEGMENTER;
         case { it.endsWith("Lemmatizer") }: 
-            return "lemmatizer";
+            return ToolCategories.LEMMATIZER;
         case { it.endsWith("PhoneticTranscriptor") }: 
-            return "transcriptor";
+            return ToolCategories.TRANSCRIPTOR;
         case { it.contains("TopicModel") }:
-            return "topicmodel";
+            return ToolCategories.TOPICMODEL;
         case { it.contains("DictionaryAnnotator") }:
-            return "gazeteer";
+            return ToolCategories.GAZETEER;
         case { it.contains("Embeddings") }:
-            return "embeddings";
+            return ToolCategories.EMBEDDINGS;
         case { it.contains("DependencyConverter") }:
-            return "parser";
+            return ToolCategories.PARSER;
         default:
-            return "other";
+            return ToolCategories.OTHER;
         }
     }
     
@@ -186,7 +169,7 @@ class MetadataAggregator {
      */
     def scanUimaComponentDescriptors(File aDirectory, Map<String, String> aRoleNames) {
         def docModuleDir = new File(aDirectory, 'de.tudarmstadt.ukp.dkpro.core.doc-asl');
-        def es = [:];
+        Map<String, EngineModel> es = [:];
         def fs = [:];
         aDirectory.eachFileRecurse(FILES) {
             if (
@@ -213,18 +196,29 @@ class MetadataAggregator {
                                 addFormat(fs, format, 'writer', pom, spec, spec.annotatorImplementationName);
                             }
                             else {
-                                es[uniqueName] = [
-                                    name: uniqueName,
-                                    implName: implName,
-                                    groupId: pom.groupId ? pom.groupId.text() : pom.parent.groupId.text(),
-                                    artifactId: pom.artifactId.text(),
-                                    version: pom.version ? pom.version.text() : pom.parent.version.text(),
-                                    module: module,
-                                    pom: pom,
-                                    spec: spec,
-                                    role: aRoleNames[getTool(uniqueName, spec)],
-                                    tool: getTool(uniqueName, spec)
-                                ];
+                                EngineModel engine = new EngineModel();
+                                engine.name = uniqueName;
+                                engine.implName = implName;
+                                engine.pom = pom;
+                                engine.spec = spec;
+                                engine.module = module;
+                                engine.role = aRoleNames[getTool(uniqueName, spec)];
+
+                                // Maven information for easy access
+                                engine.groupId = pom.groupId ? pom.groupId.text() : pom.parent.groupId.text();
+                                engine.artifactId = pom.artifactId.text();
+                                engine.version = pom.version ? pom.version.text() : pom.parent.version.text();
+                                engine.tool = getTool(uniqueName, spec);
+                                
+                                // UIMA information for easy access
+                                engine.inputs = engine.spec.analysisEngineMetaData?.capabilities?.collect { 
+                                        it.inputs?.collect { it.name  } }.flatten().sort().unique();
+                                engine.outputs = engine.spec.analysisEngineMetaData?.capabilities?.collect { 
+                                        it.outputs?.collect { it.name  } }.flatten().sort().unique();
+                                engine.languages = engine.spec.analysisEngineMetaData?.capabilities?.collect { 
+                                        it.languagesSupported }.flatten().sort().unique();
+                                engine.allLanguages = engine.languages.collect();
+                                es[uniqueName] = engine;
                             }
                         }
                     }
@@ -298,23 +292,23 @@ class MetadataAggregator {
                             // yet that apply to multiple tools... I believe - REC
                             switch (model.@tool as String) {
                             case 'token':
-                                return engine.tool == 'segmenter';
+                                return engine.tool == ToolCategories.SEGMENTER;
                             case 'sentence':
-                                return engine.tool == 'segmenter';
+                                return engine.tool == ToolCategories.SEGMENTER;
                             // Special handling for langdetect models which use wrong tool designation
                             case 'languageidentifier':
-                                return engine.tool == 'langdetect';
+                                return engine.tool == ToolCategories.LANGDETECT;
                             // Special handling for MateTools models which use wrong tool designation
                             case 'morphtagger':
-                                return engine.tool == 'morph';
+                                return engine.tool == ToolCategories.MORPH;
                             // Special handling for ClearNLP lemmatizer because dictionary is actually
                             // used in multiple places
                             case 'dictionary':
-                                return engine.tool == 'lemmatizer';
+                                return engine.tool == ToolCategories.LEMMATIZER;
                             // Required to handle CoreNLP "depparser" models because depparser component
                             // is categorized as "parser" not as "depparser"
                             case 'depparser':
-                                return engine.tool == 'parser';
+                                return engine.tool == ToolCategories.PARSER;
                             default:
                                 return engine.tool == (model.@tool as String);
                             }
@@ -325,7 +319,6 @@ class MetadataAggregator {
                     else {
                         ContextHolder.log.warn("No engine found for model ${model.@shortArtifactId}");
                     }
-                    
                 }
                 ms.addAll(modelXmls);
             }
@@ -374,7 +367,7 @@ class MetadataAggregator {
                 
                 // Skip the morphological features mapping for now because the files have completely
                 // different semantics from the other mapping files.
-                if (tool == "morph") {
+                if (tool == ToolCategories.MORPH) {
                     return;
                 }
                 
@@ -454,6 +447,25 @@ class MetadataAggregator {
         return inputOutputTypes;
     }
     
+    private void linkEnginesAndModels(MetadataModel aModel)
+    {
+        aModel.models.each { model ->
+            def engine = model.@engine as String;
+            if (engine && aModel.engines[engine]) {
+                if (!aModel.engines[engine].models) {
+                    aModel.engines[engine].models = []
+                }
+                aModel.engines[engine].models.add(model)
+                aModel.engines[engine].allLanguages << model.@language;
+                aModel.engines[engine].allLanguages = aModel.engines[engine].allLanguages.unique().sort();
+            }
+        }
+        
+        aModel.engines.each { key, engine ->
+            println "${engine} -> ${engine?.allLanguages.size()}";
+        }
+    }
+    
     public MetadataModel build(File dkproCorePath) {
         MetadataModel model = new MetadataModel();
         
@@ -470,6 +482,8 @@ class MetadataAggregator {
         
         model.models = scanModelBuilderFiles(dkproCorePath, engines);
         ContextHolder.log.info("Found ${model.models.size()} models");
+        
+        linkEnginesAndModels(model);
         
         model.tagsets = scanTagsetMappings(dkproCorePath);
         ContextHolder.log.info("Found ${model.tagsets.size()} tagsets");
