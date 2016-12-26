@@ -18,10 +18,12 @@
 package org.dkpro.meta.example.galaxy;
 
 import static groovy.io.FileType.FILES;
+import groovy.io.FileType;
 import groovy.json.*;
 import groovy.text.XmlTemplateEngine
 import groovy.transform.Field
 import groovy.util.XmlParser
+import java.nio.file.Files
 import org.dkpro.meta.core.MetadataAggregator;
 import org.dkpro.meta.core.model.MetadataModel;
 
@@ -38,9 +40,8 @@ import org.yaml.snakeyaml.Yaml;
 
 class GalaxyToolBuilder {
     public static void main(String... args) {
-        String dkproCoreDir = "/Users/bluefire/git/dkpro-core";
-        String targetDir = "target";
-        
+        String dkproCoreDir = "/home/anshul/dkpro-core";
+        String targetDir = "target";        
         File dkproCorePath = new File(dkproCoreDir);
         
         MetadataModel model = new MetadataAggregator().build(dkproCorePath);
@@ -59,6 +60,7 @@ class GalaxyToolBuilder {
 		def wrapperTemplateFormat= textTemplate.createTemplate(
 			new File("src/main/resources/templates/wrapperFormat.groovy").getText("UTF-8"));
 		
+		def toolfileTemplate = xmlEngine.createTemplate(new File("src/main/resources/templates/toolFile.xml").getText("UTF-8"));
 		
         model.engines.each { key, engine ->
             println "Processing Engine: ${engine.name}...";			
@@ -136,6 +138,41 @@ class GalaxyToolBuilder {
 			}										
 			
 		}
+		def engineFiles = []
+		def readerFiles = []
+		def writerFiles = []
+		
+		def dir = new File(targetDir)
+		dir.eachFileRecurse (FileType.FILES) { file ->
+			if(file.name.endsWith('.xml') && file.absolutePath.contains("engines")){
+				engineFiles << file
+			}
+			if(file.name.endsWith('.xml') && file.absolutePath.contains("readers")){
+				readerFiles << file
+			}
+			if(file.name.endsWith('.xml') && file.absolutePath.contains("writers")){
+				writerFiles << file
+			}
+		}
+		def templateBindingTool = [
+			path: dir.absoluteFile,
+			writerFiles :writerFiles,
+			readerFiles: readerFiles,
+			engineFiles: engineFiles];
+		def toolResult = toolfileTemplate.make(templateBindingTool);
+		def toolOutputReader = new File("${targetDir}/my_tools.xml");
+		toolOutputReader.parentFile.mkdirs();
+		toolOutputReader.setText(toolResult.toString(), 'UTF-8');
+		
+//		<?xml version='1.0' encoding='utf-8'?>
+//		<toolbox monitor="true">
+//		  <section id="DKPro" name="DKPro Components">
+//			<tool file="/local_tools/dkpro/AnnotationByTextFilter.xml" />
+//			<tool file="/local_tools/dkpro/BerkeleyParser.xml" />
+//			<tool file="/local_tools/dkpro/StanfordSegmenter.xml" />
+//		 </section>
+//		</toolbox>
+		
 		
     }
 }

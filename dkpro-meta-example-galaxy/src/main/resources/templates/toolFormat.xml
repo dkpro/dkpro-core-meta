@@ -31,9 +31,11 @@
 		if(type == "reader"){
 			paramDecls = format.readerSpec.metaData.configurationParameterDeclarations.configurationParameters.sort { it.name };
 			paramValues = format.readerSpec.metaData.configurationParameterSettings.parameterSettings;
+			description = format.readerSpec.metaData.description;
 		}else {
 			paramDecls = format.writerSpec.metaData.configurationParameterDeclarations.configurationParameters.sort { it.name };
 			paramValues = format.writerSpec.metaData.configurationParameterSettings.parameterSettings;
+			description = format.writerSpec.metaData.description;
 		}
 		def typeMap = [
 		'Boolean': 'boolean',
@@ -75,7 +77,7 @@
 	<outputs>
 		<data name='result' />
 	</outputs>
-	<help> 
-    <![CDATA[${html2text(format.description)}]]>
+	<help> 	
+    <![CDATA[${html2text(description)}]]>
 	</help>
 </tool>
