@@ -456,7 +456,7 @@ class MetadataAggregator {
                     aModel.engines[engine].models = []
                 }
                 aModel.engines[engine].models.add(model)
-                aModel.engines[engine].allLanguages << model.@language;
+                aModel.engines[engine].allLanguages << (model.@language as String);
                 aModel.engines[engine].allLanguages = aModel.engines[engine].allLanguages.unique().sort();
             }
         }
