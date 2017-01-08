@@ -40,8 +40,9 @@ import org.yaml.snakeyaml.Yaml;
 
 class GalaxyToolBuilder {
     public static void main(String... args) {
-        String dkproCoreDir = "/home/anshul/dkpro-core";
-        String targetDir = "target";        
+        String dkproCoreDir = args[0];
+        String targetDir = args[1];        
+        
         File dkproCorePath = new File(dkproCoreDir);
         
         MetadataModel model = new MetadataAggregator().build(dkproCorePath);
