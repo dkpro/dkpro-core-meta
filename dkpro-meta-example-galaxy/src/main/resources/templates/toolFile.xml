@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <!--
   Licensed to the Technische Universität Darmstadt under one
   or more contributor license agreements. See the NOTICE file
@@ -15,7 +16,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<?xml version='1.0' encoding='utf-8'?>
 <toolbox xmlns:gsp='http://groovy.codehaus.org/2005/gsp' monitor="true">
 	<section id="DKProEngine" name="DKPro Engines">
 		<gsp:scriptlet>
