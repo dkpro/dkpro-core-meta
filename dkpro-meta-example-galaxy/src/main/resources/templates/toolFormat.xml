@@ -37,35 +37,32 @@
 			paramValues = format.writerSpec.metaData.configurationParameterSettings.parameterSettings;
 			description = format.writerSpec.metaData.description;
 		}
-		def typeMap = [
-		'Boolean': 'boolean',
-		'Integer': 'integer',
-		'Float': 'float'
-		];
-		def paramList = [:];
-     	StringBuilder sb = new StringBuilder();
+    
+     	StringBuilder sb = new StringBuilder("\n");
       	paramDecls.each { param ->
-        def type = typeMap[param.type] ?: 'text';
-        paramList["-"+"${param.name}"]= "\$"+"${param.name}" ;
-        sb.append("-");
-        sb.append("${param.name}");
-        sb.append(" ");
-        sb.append("\$");
-        sb.append("${param.name}");
-        sb.append(" ");
+          sb.append("#if \$${param.name}\n");
+          sb.append("-${param.name} \$${param.name}\n");
+          sb.append("#end if\n");
         }
 	</gsp:scriptlet>
-	<command interpreter="groovy">${format.name}.groovy ${"\"\$input\""} ${"\"\$result\""} ${"\"\$hideOutput\""} ${sb.toString()}</command>
+	<command interpreter="groovy"><gsp:expression>"&lt;![CDATA["</gsp:expression>
+      ${format.name}.groovy ${"\"\$input\""} ${"\"\$result\""} ${"\"\$hideOutput\""} ${sb.toString()}
+    <gsp:expression>"]]&gt;"</gsp:expression></command>
 	<inputs>
 		<param name='input' type='data' label="component" />
 		<gsp:scriptlet>
+            def typeMap = [
+                'Boolean': 'boolean',
+                'Integer': 'integer',
+                'Float': 'float'
+            ];
 
 			paramDecls.each { param ->
-			def type = typeMap[param.type] ?: 'text';
-			def value = paramValues.find { it.name == param.name }?.value;
+			def paramType = typeMap[param.type] ?: 'text';
+            def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 
 		</gsp:scriptlet>
-		<param name="${param.name}" label="${param.name}" type="${type}"
-			optional="${!param.mandatory}" area="${param.multiValued}" value="${value}"
+		<param name="${param.name}" label="${param.name}" type="${paramType}"
+			optional="${!param.mandatory}" area="${param.multiValued}" value="${paramValue}"
 			help="${html2text(param.description)}">
 		</param>
 		<gsp:scriptlet>
