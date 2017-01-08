@@ -23,15 +23,17 @@ import org.dkpro.script.groovy.DKProCoreScript;
 version '${version}'
 
 def input = args[0]
-def output = arg[1]
-def pos = 2
+def output = args[1]
 def paramList = [:];
 
-if(args.length<pos){
+println "${type}"
+println args;
+
+if (args.length < 3){
 	println "Not enough params";
 	exit();
 }
-for (pos = 2; pos < args.length; pos += 2) {
+for (pos = 3; pos < args.length; pos += 2) {
 	def key = args[pos].replace("-","");
 	if(args[pos+1] == "true"){
 		paramList[key] = true

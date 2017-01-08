@@ -26,10 +26,9 @@ def inputFile = args[0]
 def outputPath = args[1]
 def hideOut = args[2]
 
-def pos = 3
 def paramList = [:];
 
-if(args.length<pos){
+if (args.length < 3){
 	println "Not enough params";
 	exit();
 }
