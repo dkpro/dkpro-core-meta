@@ -15,7 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<tool xmlns:gsp='http://groovy.codehaus.org/2005/gsp' id="${format.name}"
+<tool xmlns:gsp='http://groovy.codehaus.org/2005/gsp' id="${format.name}_${type}"
 	name="${format.name}">
 
 	<gsp:scriptlet>
@@ -28,18 +28,18 @@
 	<gsp:scriptlet>
 		def paramDecls;
 		def paramValues;
-		if(type == "reader"){
+		if (type == "reader") {
 			paramDecls = format.readerSpec.metaData.configurationParameterDeclarations.configurationParameters.sort { it.name };
 			paramValues = format.readerSpec.metaData.configurationParameterSettings.parameterSettings;
 			description = format.readerSpec.metaData.description;
-		}else {
+		} else {
 			paramDecls = format.writerSpec.metaData.configurationParameterDeclarations.configurationParameters.sort { it.name };
 			paramValues = format.writerSpec.metaData.configurationParameterSettings.parameterSettings;
 			description = format.writerSpec.metaData.description;
 		}
     
      	StringBuilder sb = new StringBuilder("\n");
-      	paramDecls.each { param ->
+        paramDecls.each { param ->
           sb.append("#if \$${param.name}\n");
           sb.append("-${param.name} \$${param.name}\n");
           sb.append("#end if\n");
