@@ -59,19 +59,19 @@ class MetadataAggregator {
         }
     }
     
-    def addFormat(Map<String, FormatModel> aTarget, format, kind, pom, spec, clazz) {
-        if (!aTarget[format]) {
-            aTarget[format] = new FormatModel();
-            aTarget[format].with {
-                name = format;
-                groupId = pom.groupId ? pom.groupId.text() : pom.parent.groupId.text();
-                artifactId = pom.artifactId.text();
-                version = pom.version ? pom.version.text() : pom.parent.version.text();
-                pom = pom;
+    def addFormat(Map<String, FormatModel> aTarget, aFormat, aKind, aPom, aSpec, aClazz) {
+        if (!aTarget[aFormat]) {
+            aTarget[aFormat] = new FormatModel();
+            aTarget[aFormat].with {
+                name = aFormat;
+                pom = aPom;
+                groupId = aPom.groupId ? aPom.groupId.text() : aPom.parent.groupId.text();
+                artifactId = aPom.artifactId.text();
+                version = aPom.version ? aPom.version.text() : aPom.parent.version.text();
             }
         }
-        aTarget[format][kind+'Class'] = clazz;
-        aTarget[format][kind+'Spec'] = spec;
+        aTarget[aFormat][aKind+'Class'] = aClazz;
+        aTarget[aFormat][aKind+'Spec'] = aSpec;
     }
     
     /**
