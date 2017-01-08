@@ -24,31 +24,42 @@ import org.dkpro.script.groovy.DKProCoreScript;
 
 version "${version}"
 
-def inputFile = args[0]
-def outputPath = args[1]
-def hideOut = args[2]
+// Debug output
+println args;
 
+// Mapping of parameters to their types so we can cast the values before passing them to uimaFIT
+def typemap = [:];
+<%
+// BEGIN TEMPLATE LOGIC
+def paramDecls = engine.spec.metaData.configurationParameterDeclarations
+        .configurationParameters.sort { it.name };
+
+paramDecls.each { param ->
+    println "typemap[\"${param.name}\"] = ${param.type};";
+}
+// END TEMPLATE LOGIC
+%>
+
+// Parse the command line arguments
+def input = args[0]
+def output = args[1]
+def hideOut = args[2]
 def paramList = [:];
 
 if (args.length < 3){
-	println "Not enough params";
-	exit();
+    println "Not enough params";
+    System.exit(1);
 }
+
 for (pos = 3; pos < args.length; pos += 2) {
-	def key = args[pos].replace("-","");
-	if(args[pos+1] == "true"){
-		paramList[key] = true
-	}else {
-		if(args[pos+1] == "false"){
-			paramList[key] = false
-		}else{
-			paramList[key] = "\""+args[pos+1]+"\"";
-		}
-	}
+    def paramName = args[pos].substring(1);
+    paramList[paramName] = args[pos+1].asType(typemap[paramName]);
 }
+
+// Assemble the actual pipeline
 read 'Xmi' from inputFile
 
-apply '${engine.name}' params(paramList)
+apply "${engine.name}" params(paramList)
 
 write 'Xmi' to outputPath params([
 	overwrite: true])

@@ -22,47 +22,68 @@ import groovy.transform.BaseScript
 import org.dkpro.script.groovy.DKProCoreScript;
 @BaseScript DKProCoreScript baseScript
 
-version '${version}'
+version "${version}"
 
-def input = args[0]
-def output = args[1]
-def paramList = [:];
-
+// Debug output
 println "${type}"
 println args;
 
-if (args.length < 3){
-	println "Not enough params";
-	exit();
-}
-for (pos = 3; pos < args.length; pos += 2) {
-	def key = args[pos].replace("-","");
-	if(args[pos+1] == "true"){
-		paramList[key] = true
-	}else {
-		if(args[pos+1] == "false"){
-			paramList[key] = false
-		}else{
-			paramList[key] = "\""+args[pos+1]+"\"";
-		}
-	}
+// Mapping of parameters to their types so we can cast the values before passing them to uimaFIT
+def typemap = [:];
+<%
+// BEGIN TEMPLATE LOGIC
+def paramDecls;
+if (type == "reader") {
+    paramDecls = format.readerSpec.metaData.configurationParameterDeclarations
+        .configurationParameters.sort { it.name };
+} else {
+    paramDecls = format.writerSpec.metaData.configurationParameterDeclarations
+        .configurationParameters.sort { it.name };
 }
 
-<%
-if(type=="reader"){
+paramDecls.each { param ->
+    println "typemap[\"${param.name}\"] = ${param.type};";
+}
+// END TEMPLATE LOGIC
 %>
-read '${format.name}' from input params(paramList)
+
+// Parse the command line arguments
+def input = args[0]
+def output = args[1]
+def hideOut = args[2]
+def paramList = [:];
+
+if (args.length < 3){
+    println "Not enough params";
+    System.exit(1);
+}
+
+for (pos = 3; pos < args.length; pos += 2) {
+    def paramName = args[pos].substring(1);
+    paramList[paramName] = args[pos+1].asType(typemap[paramName]);
+}
+
+// Assemble the actual pipeline
+<%
+// BEGIN TEMPLATE LOGIC
+if(type=="reader"){
+// END TEMPLATE LOGIC
+%>
+read "${format.name}" from input params(paramList)
 
 write 'Xmi' to output params([
 	overwrite: true])
 <%	
-}else{
+// BEGIN TEMPLATE LOGIC
+} else {
+// END TEMPLATE LOGIC
 %>
 read 'Xmi' from input
 
-write '${format.name}' to output params(paramList)
+write "${format.name}" to output params(paramList)
 
 <%
+// BEGIN TEMPLATE LOGIC
 }
-
+// END TEMPLATE LOGIC
 %>

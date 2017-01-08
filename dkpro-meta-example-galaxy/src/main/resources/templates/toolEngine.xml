@@ -16,40 +16,37 @@
   limitations under the License.
 -->
 <tool xmlns:gsp='http://groovy.codehaus.org/2005/gsp' id="${engine.name}" name="${engine.name}" >
-
   <gsp:scriptlet>
     import org.jsoup.Jsoup;
-    
+
     def html2text(html) {
       return html ? Jsoup.parse(html).text() : "";
     }
+
+    def paramDecls = engine.spec.metaData.configurationParameterDeclarations
+        .configurationParameters.sort { it.name };
+    
+    // Construct parameter list
+    StringBuilder sb = new StringBuilder("\n");
+    paramDecls.each { param ->
+      sb.append("#if \$${param.name}\n");
+      sb.append("-${param.name} \$${param.name}\n");
+      sb.append("#end if\n");
+    }
   </gsp:scriptlet>
-  <gsp:scriptlet>
-      def paramDecls = engine.spec.metaData.configurationParameterDeclarations
-          .configurationParameters.sort { it.name };
-          
-      StringBuilder sb = new StringBuilder("\n");
-      paramDecls.each { param ->
-        sb.append("#if \$${param.name}\n");
-        sb.append("-${param.name} \$${param.name}\n");
-        sb.append("#end if\n");
-        }
-	</gsp:scriptlet>
-    <command interpreter="groovy"><gsp:expression>"&lt;![CDATA["</gsp:expression>
-      ${engine.name}.groovy ${"\"\$input\""} ${"\"\$result\""} ${"\"\$hideOutput\""} ${sb.toString()}
-    <gsp:expression>"]]&gt;"</gsp:expression></command>
+  <command interpreter="groovy"><gsp:expression>"&lt;![CDATA["</gsp:expression>
+    ${engine.name}.groovy ${"\"\$input\""} ${"\"\$result\""} ${"\"\$hideOutput\""} ${sb.toString()}
+  <gsp:expression>"]]&gt;"</gsp:expression></command>
   <inputs>
     <param name='input' type='data' label="component"/>
     <gsp:scriptlet>      
-      def paramValues = engine.spec.metaData.configurationParameterSettings
-              .parameterSettings;
-    
+      def paramValues = engine.spec.metaData.configurationParameterSettings.parameterSettings;
       def typeMap = [ 
         'Boolean': 'boolean',
         'Integer': 'integer',
         'Float':   'float' 
       ];
-    
+
       paramDecls.each { param ->
         def paramType = typeMap[param.type] ?: 'text';
         def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 

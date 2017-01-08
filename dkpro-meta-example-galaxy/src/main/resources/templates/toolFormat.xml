@@ -16,65 +16,69 @@
   limitations under the License.
 -->
 <tool xmlns:gsp='http://groovy.codehaus.org/2005/gsp' id="${format.name}_${type}"
-	name="${format.name}">
+    name="${format.name}">
+  <gsp:scriptlet>
+    import org.jsoup.Jsoup;
 
-	<gsp:scriptlet>
-		import org.jsoup.Jsoup;
-
-		def html2text(html) {
-		    return html ? Jsoup.parse(html).text() : "";
-		}
-	</gsp:scriptlet>
-	<gsp:scriptlet>
-		def paramDecls;
-		def paramValues;
-		if (type == "reader") {
-			paramDecls = format.readerSpec.metaData.configurationParameterDeclarations.configurationParameters.sort { it.name };
-			paramValues = format.readerSpec.metaData.configurationParameterSettings.parameterSettings;
-			description = format.readerSpec.metaData.description;
-		} else {
-			paramDecls = format.writerSpec.metaData.configurationParameterDeclarations.configurationParameters.sort { it.name };
-			paramValues = format.writerSpec.metaData.configurationParameterSettings.parameterSettings;
-			description = format.writerSpec.metaData.description;
-		}
+    def html2text(html) {
+        return html ? Jsoup.parse(html).text() : "";
+    }
     
-     	StringBuilder sb = new StringBuilder("\n");
-        paramDecls.each { param ->
-          sb.append("#if \$${param.name}\n");
-          sb.append("-${param.name} \$${param.name}\n");
-          sb.append("#end if\n");
-        }
-	</gsp:scriptlet>
-	<command interpreter="groovy"><gsp:expression>"&lt;![CDATA["</gsp:expression>
+    def paramDecls;
+    def paramValues;
+    def description;
+    if (type == "reader") {
+      paramDecls = format.readerSpec.metaData.configurationParameterDeclarations.configurationParameters.sort { it.name };
+      paramValues = format.readerSpec.metaData.configurationParameterSettings.parameterSettings;
+      description = format.readerSpec.metaData.description;
+    } else {
+      paramDecls = format.writerSpec.metaData.configurationParameterDeclarations.configurationParameters.sort { it.name };
+      paramValues = format.writerSpec.metaData.configurationParameterSettings.parameterSettings;
+      description = format.writerSpec.metaData.description;
+    }
+  
+    // Construct parameter list
+   	StringBuilder sb = new StringBuilder("\n");
+    paramDecls.each { param ->
+      sb.append("#if \$${param.name}\n");
+      sb.append("-${param.name} \$${param.name}\n");
+      sb.append("#end if\n");
+    }
+  </gsp:scriptlet>
+  <command interpreter="groovy"><gsp:expression>"&lt;![CDATA["</gsp:expression>
       ${format.name}.groovy ${"\"\$input\""} ${"\"\$result\""} ${"\"\$hideOutput\""} ${sb.toString()}
-    <gsp:expression>"]]&gt;"</gsp:expression></command>
-	<inputs>
-		<param name='input' type='data' label="component" />
-		<gsp:scriptlet>
-            def typeMap = [
-                'Boolean': 'boolean',
-                'Integer': 'integer',
-                'Float': 'float'
-            ];
+  <gsp:expression>"]]&gt;"</gsp:expression></command>
+  <inputs>
+    <param name='input' type='data' label="component" />
+    <gsp:scriptlet>
+      def typeMap = [
+          'Boolean': 'boolean',
+          'Integer': 'integer',
+          'Float': 'float'
+      ];
 
-			paramDecls.each { param ->
-			def paramType = typeMap[param.type] ?: 'text';
-            def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 
-		</gsp:scriptlet>
-		<param name="${param.name}" label="${param.name}" type="${paramType}"
-			optional="${!param.mandatory}" area="${param.multiValued}" value="${paramValue}"
-			help="${html2text(param.description)}">
-		</param>
-		<gsp:scriptlet>
-			}
-		</gsp:scriptlet>
-		<param name='hideOutput' type='boolean' label="hide logging info"
-			checked="true" />
-	</inputs>
-	<outputs>
-		<data name='result' />
-	</outputs>
-	<help> 	
+      paramDecls.each { param ->
+        def paramType = typeMap[param.type] ?: 'text';
+        def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 
+  </gsp:scriptlet>
+  <param 
+      name="${param.name}"
+      label="${param.name}"
+      type="${paramType}"
+      optional="${!param.mandatory}"
+      area="${param.multiValued}"
+      value="${paramValue}"
+      help="${html2text(param.description)}">
+  </param>
+    <gsp:scriptlet>
+      }
+    </gsp:scriptlet>
+  <param name='hideOutput' type='boolean' label="hide logging info" checked="true" />
+  </inputs>
+  <outputs>
+	<data name='result' />
+  </outputs>
+  <help> 	
     <![CDATA[${html2text(description)}]]>
-	</help>
+  </help>
 </tool>
