@@ -15,6 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@GrabResolver(name='ukp-oss-snapshots',
+     root='http://zoidberg.ukp.informatik.tu-darmstadt.de/artifactory/public-snapshots')
 @Grab('org.dkpro.script:dkpro-script-groovy:0.1.0')
 import groovy.transform.BaseScript
 import org.dkpro.script.groovy.DKProCoreScript;

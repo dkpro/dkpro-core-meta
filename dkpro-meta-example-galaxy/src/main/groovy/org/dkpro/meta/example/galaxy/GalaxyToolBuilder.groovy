@@ -68,7 +68,7 @@ class GalaxyToolBuilder {
             def templateBinding = [
                 engine: engine,
                 engines: model.engines,
-				version: "1.8.0",               
+				version: engine.version,               
                 models: model.models,
                 datasets: model.datasets,
                 tagsets: model.tagsets,
@@ -94,9 +94,9 @@ class GalaxyToolBuilder {
 			if(format.readerSpec){
 				def templateBindingReader = [
 					format: format,
-					type:"reader",
+					type: "reader",
 					formats: model.formats,
-					version: "1.8.0",
+					version: format.version,
 					models: model.models,
 					datasets: model.datasets,
 					tagsets: model.tagsets,
@@ -117,9 +117,9 @@ class GalaxyToolBuilder {
 			if(format.writerSpec){
 				def templateBindingWriter = [
 					format: format,
-					type:"writer",
+					type: "writer",
 					formats: model.formats,
-					version: "1.8.0",
+					version: format.version,
 					models: model.models,
 					datasets: model.datasets,
 					tagsets: model.tagsets,
