@@ -15,16 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dkpro.meta.core.model;
+package org.dkpro.meta.core.model
 
-public class MetadataModel
+class FormatModel
 {
-    def typesystems;
-    Map<String, EngineModel> engines;
-    Map<String, FormatModel> formats;
-    def models;
-    def tagsets;
-    def inputOutputTypes;
-    def typesystemMappings;
-    def datasets;
+    String name;
+    String groupId;
+    String artifactId;
+    String version;
+    def pom;
+    def readerClass;
+    def readerSpec;
+    def writerClass;
+    def writerSpec;
+        
+    @Override
+    public String toString()
+    {
+        return name;
+    }
 }

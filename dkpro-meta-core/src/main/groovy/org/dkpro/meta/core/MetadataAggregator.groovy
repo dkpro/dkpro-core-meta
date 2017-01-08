@@ -24,6 +24,7 @@ import groovy.text.XmlTemplateEngine;
 import groovy.transform.Field;
 import groovy.util.XmlParser;
 import org.dkpro.meta.core.maven.ContextHolder
+import org.dkpro.meta.core.model.FormatModel;
 import org.dkpro.meta.core.model.EngineModel;
 import org.dkpro.meta.core.model.MetadataModel
 import org.dkpro.meta.vocab.ToolCategories;
@@ -58,15 +59,16 @@ class MetadataAggregator {
         }
     }
     
-    def addFormat(aTarget, format, kind, pom, spec, clazz) {
+    def addFormat(Map<String, FormatModel> aTarget, format, kind, pom, spec, clazz) {
         if (!aTarget[format]) {
-            aTarget[format] = [
-                name: format,
-                groupId: pom.groupId ? pom.groupId.text() : pom.parent.groupId.text(),
-                artifactId: pom.artifactId.text(),
-                version: pom.version ? pom.version.text() : pom.parent.version.text(),
-                pom: pom
-            ];
+            aTarget[format] = new FormatModel();
+            aTarget[format].with {
+                name = format;
+                groupId = pom.groupId ? pom.groupId.text() : pom.parent.groupId.text();
+                artifactId = pom.artifactId.text();
+                version = pom.version ? pom.version.text() : pom.parent.version.text();
+                pom = pom;
+            }
         }
         aTarget[format][kind+'Class'] = clazz;
         aTarget[format][kind+'Spec'] = spec;
@@ -170,7 +172,7 @@ class MetadataAggregator {
     def scanUimaComponentDescriptors(File aDirectory, Map<String, String> aRoleNames) {
         def docModuleDir = new File(aDirectory, 'de.tudarmstadt.ukp.dkpro.core.doc-asl');
         Map<String, EngineModel> es = [:];
-        def fs = [:];
+        Map<String, FormatModel> fs = [:];
         aDirectory.eachFileRecurse(FILES) {
             if (
                 it.name.endsWith('.xml') &&
