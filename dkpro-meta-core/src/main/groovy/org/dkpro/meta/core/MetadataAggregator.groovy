@@ -463,9 +463,9 @@ class MetadataAggregator {
             }
         }
         
-        aModel.engines.each { key, engine ->
-            println "${engine} -> ${engine?.allLanguages.size()}";
-        }
+        // aModel.engines.each { key, engine ->
+        //     ContextHolder.log.info("${engine} -> ${engine?.allLanguages.size()}");
+        // }
     }
     
     public MetadataModel build(File dkproCorePath) {
