@@ -57,9 +57,9 @@ for (pos = 3; pos < args.length; pos += 2) {
 }
 
 // Assemble the actual pipeline
-read 'Xmi' from inputFile
+read 'BinaryCas' from inputFile
 
 apply "${engine.name}" params(paramList)
 
-write 'Xmi' to outputPath params([
+write 'BinaryCas' to outputPath params([
 	overwrite: true])

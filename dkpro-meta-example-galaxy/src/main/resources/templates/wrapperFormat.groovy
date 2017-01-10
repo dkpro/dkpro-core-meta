@@ -71,14 +71,14 @@ if(type=="reader"){
 %>
 read "${format.name}" from input params(paramList)
 
-write 'Xmi' to output params([
+write 'BinaryCas' to output params([
 	overwrite: true])
 <%	
 // BEGIN TEMPLATE LOGIC
 } else {
 // END TEMPLATE LOGIC
 %>
-read 'Xmi' from input
+read 'BinaryCas' from input
 
 write "${format.name}" to output params(paramList)
 
