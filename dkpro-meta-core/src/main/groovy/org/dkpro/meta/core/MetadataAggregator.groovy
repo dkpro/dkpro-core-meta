@@ -308,12 +308,8 @@ class MetadataAggregator {
                                 return engine.tool == ToolCategories.MORPH;
                             // Special handling for ClearNLP lemmatizer because dictionary is actually
                             // used in multiple places
-                            case 'dictionary':
+                            case 'lemmatizer':
                                 return engine.tool == ToolCategories.LEMMATIZER;
-                            // Required to handle CoreNLP "depparser" models because depparser component
-                            // is categorized as "parser" not as "depparser"
-                            case 'depparser':
-                                return engine.tool == ToolCategories.PARSER;
                             default:
                                 return engine.tool == (model.@tool as String);
                             }

@@ -26,7 +26,7 @@ public class ToolCategories
          chunker:        'Chunker',
          segmenter:      'Segmenter',
          checker:        'Checker',
-         lemmatizer:     'Lemmatizer',
+         lemma:          'Lemmatizer',
          srl:            'Semantic role labeler',
          morph:          'Morphological analyzer',
          transformer:    'Transformer',
@@ -51,7 +51,7 @@ public class ToolCategories
     public static String TAGGER = "tagger";
     public static String PARSER = "parser";
     public static String SEGMENTER = "segmenter";
-    public static String LEMMATIZER = "lemmatizer";
+    public static String LEMMATIZER = "lemma";
     public static String TRANSCRIPTOR = "transcriptor";
     public static String TOPICMODEL = "topicmodel";
     public static String GAZETEER = "gazeteer";
