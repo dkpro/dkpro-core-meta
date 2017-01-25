@@ -283,11 +283,14 @@ class MetadataAggregator {
                         model.@version = "${model.@upstreamVersion}.${model.@metaDataVersion}" as String;
                     }
                     
+                    // Locate the component to which this model belongs. We use the package name
+                    // as an indicator and additionally match the tool type against the component
+                    // name taking into account the component naming conventions.
                     def engine = aEngines.values()
                         .findAll { engine ->
                             def clazz = engine.spec.annotatorImplementationName;
                             def enginePack = clazz.substring(0, clazz.lastIndexOf('.'));
-                            enginePack == pack;
+                            enginePack == pack && !clazz.endsWith("Trainer");
                         }
                         .find { engine ->
                             // There should be only one tool matching here - at least we don't have models
