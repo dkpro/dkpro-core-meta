@@ -93,6 +93,8 @@ class MetadataAggregator {
         case { 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.GrammarAnomaly' in outputs ||
                'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly' in outputs }: 
             return ToolCategories.CHECKER;
+        case { it.endsWith("PosTagger") }: 
+            return ToolCategories.TAGGER;
         case { 'de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.MorphologicalFeatures' in outputs }: 
             return ToolCategories.MORPH;
         case { 'de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemanticArgument' in outputs ||
