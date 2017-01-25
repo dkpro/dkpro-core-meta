@@ -290,13 +290,13 @@ class MetadataAggregator {
                     // Locate the component to which this model belongs. We use the package name
                     // as an indicator and additionally match the tool type against the component
                     // name taking into account the component naming conventions.
-                    def engine = aEngines.values()
+                    def candidates = aEngines.values()
                         .findAll { engine ->
                             def clazz = engine.spec.annotatorImplementationName;
                             def enginePack = clazz.substring(0, clazz.lastIndexOf('.'));
                             enginePack == pack && !clazz.endsWith("Trainer");
-                        }
-                        .find { engine ->
+                        };
+                    def engine = candidates.find { engine ->
                             // There should be only one tool matching here - at least we don't have models
                             // yet that apply to multiple tools... I believe - REC
                             switch (model.@tool as String) {
@@ -322,7 +322,7 @@ class MetadataAggregator {
                         model.@engine = engine.name;
                     }
                     else {
-                        ContextHolder.log.warn("No engine found for model ${model.@shortArtifactId}");
+                        ContextHolder.log.warn("No engine found for model ${model.@shortArtifactId} (candidates: ${candidates})");
                     }
                 }
                 ms.addAll(modelXmls);
