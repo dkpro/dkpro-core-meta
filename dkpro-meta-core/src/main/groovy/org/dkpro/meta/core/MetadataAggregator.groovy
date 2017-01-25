@@ -117,6 +117,8 @@ class MetadataAggregator {
             return ToolCategories.NER;
         case { it.endsWith("Tagger") }: 
             return ToolCategories.TAGGER;
+        case { it.endsWith("DependencyParser") }: 
+            return ToolCategories.DEPPARSER;
         case { it.endsWith("Parser") }: 
             return ToolCategories.PARSER;
         case { 

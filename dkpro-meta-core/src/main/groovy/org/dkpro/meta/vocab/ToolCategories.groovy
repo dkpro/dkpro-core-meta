@@ -23,6 +23,7 @@ public class ToolCategories
          coref:          'Coreference resolver',
          tagger:         'Part-of-speech tagger',
          parser:         'Parser',
+         depparser:      'Parser',
          chunker:        'Chunker',
          segmenter:      'Segmenter',
          checker:        'Checker',
@@ -50,6 +51,7 @@ public class ToolCategories
     public static String LANGDETECT = "langdetect";
     public static String TAGGER = "tagger";
     public static String PARSER = "parser";
+    public static String DEPPARSER = "depparser";
     public static String SEGMENTER = "segmenter";
     public static String LEMMATIZER = "lemma";
     public static String TRANSCRIPTOR = "transcriptor";
