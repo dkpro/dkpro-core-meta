@@ -139,7 +139,7 @@ class MetadataAggregator {
         case { it.contains("Embeddings") }:
             return ToolCategories.EMBEDDINGS;
         case { it.contains("DependencyConverter") }:
-            return ToolCategories.PARSER;
+            return ToolCategories.DEPCONV;
         default:
             return ToolCategories.OTHER;
         }
