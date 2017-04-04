@@ -43,6 +43,8 @@ class GalaxyToolBuilder {
         String dkproCoreDir = args[0];
         String targetDir = args[1];        
         
+        new File(targetDir).mkdirs();
+        
         File dkproCorePath = new File(dkproCoreDir);
         
         MetadataModel model = new MetadataAggregator().build(dkproCorePath);
