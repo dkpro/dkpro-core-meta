@@ -61,7 +61,6 @@
       </snapshots>
       </repository>
     -->
-    <!-- added this to resolve fangorn artifact -->
   </repositories>
   <pluginRepositories>
     <!-- For UIMA/uimaFIT SNAPSHOT maven plugin -->
@@ -105,8 +104,8 @@
   <properties>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
     <uima.version>2.10.0-SNAPSHOT</uima.version>
-    <uimafit.version>2.3.0-SNAPSHOT</uimafit.version>
-    <uimafit.plugin.version>2.3.0-SNAPSHOT</uimafit.plugin.version>
+    <uimafit.version>2.3.0</uimafit.version>
+    <uimafit.plugin.version>2.3.0</uimafit.plugin.version>
     <!-- The Spring version should be at least whatever uimaFIT requires -->
     <spring.version>3.2.16.RELEASE</spring.version>
     <groovy.version>2.4.7</groovy.version>
