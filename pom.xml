@@ -35,20 +35,27 @@
     <url>https://www.ukp.tu-darmstadt.de/</url>
   </organization>
   <inceptionYear>2016</inceptionYear>
+  <licenses>
+    <license>
+      <name>Apache License Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
   <repositories>
     <!-- For UIMA/uimaFIT SNAPSHOT -->
     <!--
-    <repository>
+      <repository>
       <id>apache.snapshots</id>
       <name>Apache Snapshot Repository</name>
       <url>http://repository.apache.org/snapshots</url>
       <releases>
-        <enabled>false</enabled>
+      <enabled>false</enabled>
       </releases>
       <snapshots>
-        <enabled>true</enabled>
+      <enabled>true</enabled>
       </snapshots>
-    </repository>
+      </repository>
     -->
     <!-- For DKPro Parent POM SNAPSHOT -->
     <!--
