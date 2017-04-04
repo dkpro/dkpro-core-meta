@@ -22,7 +22,6 @@ import static org.junit.Assert.*
 import groovy.io.FileType
 
 import org.codehaus.groovy.control.CompilerConfiguration
-import org.dkpro.script.groovy.DKProCoreScript
 import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
