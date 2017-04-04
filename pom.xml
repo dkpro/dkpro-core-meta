@@ -37,6 +37,7 @@
   <inceptionYear>2016</inceptionYear>
   <repositories>
     <!-- For UIMA/uimaFIT SNAPSHOT -->
+    <!--
     <repository>
       <id>apache.snapshots</id>
       <name>Apache Snapshot Repository</name>
@@ -48,6 +49,7 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
+    -->
     <!-- For DKPro Parent POM SNAPSHOT -->
     <!--
       <repository>
@@ -103,7 +105,7 @@
   </scm>
   <properties>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
-    <uima.version>2.10.0-SNAPSHOT</uima.version>
+    <uima.version>2.9.0</uima.version>
     <uimafit.version>2.3.0</uimafit.version>
     <uimafit.plugin.version>2.3.0</uimafit.plugin.version>
     <!-- The Spring version should be at least whatever uimaFIT requires -->
