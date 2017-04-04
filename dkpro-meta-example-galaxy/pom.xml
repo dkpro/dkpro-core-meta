@@ -25,6 +25,9 @@
   <packaging>jar</packaging>
   <artifactId>dkpro-meta-example-galaxy</artifactId>
   <name>DKPro Meta - Example - Galaxy</name>
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>org.dkpro.meta</groupId>
