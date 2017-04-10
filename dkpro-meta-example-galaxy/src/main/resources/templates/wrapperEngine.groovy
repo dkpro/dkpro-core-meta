@@ -17,7 +17,7 @@
  */
 @GrabResolver(name='ukp-oss-snapshots',
      root='http://zoidberg.ukp.informatik.tu-darmstadt.de/artifactory/public-snapshots')
-@Grab('org.dkpro.script:dkpro-script-groovy:0.1.0')
+@Grab('org.dkpro.script:dkpro-script-groovy:0.2.0-SNAPSHOT')
 import groovy.transform.BaseScript
 import org.dkpro.script.groovy.DKProCoreScript;
 @BaseScript DKProCoreScript baseScript

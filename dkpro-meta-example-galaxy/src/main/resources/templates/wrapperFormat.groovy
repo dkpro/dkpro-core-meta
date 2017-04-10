@@ -17,7 +17,7 @@
  */
 @GrabResolver(name='ukp-oss-snapshots',
      root='http://zoidberg.ukp.informatik.tu-darmstadt.de/artifactory/public-snapshots')
-@Grab('org.dkpro.script:dkpro-script-groovy:0.1.0')
+@Grab('org.dkpro.script:dkpro-script-groovy:0.2.0-SNAPSHOT')
 import groovy.transform.BaseScript
 import org.dkpro.script.groovy.DKProCoreScript;
 @BaseScript DKProCoreScript baseScript
@@ -72,12 +72,15 @@ if(type=="reader"){
 read "${format.name}" from input params(paramList)
 
 write 'BinaryCas' to output params([
-	overwrite: true])
+	overwrite: true,
+	singularTarget: true])
 <%	
 // BEGIN TEMPLATE LOGIC
 } else {
 // END TEMPLATE LOGIC
 %>
+paramList["singularTarget"] = true
+
 read 'BinaryCas' from input
 
 write "${format.name}" to output params(paramList)
