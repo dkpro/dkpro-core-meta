@@ -56,7 +56,6 @@ class GalaxyToolBuilder {
 		def toolTemplateFormat = xmlEngine.createTemplate(
 			new File("src/main/resources/templates/toolFormat.xml").getText("UTF-8"));
 		
-		
         def textTemplate = new groovy.text.SimpleTemplateEngine(this.class.classLoader);
         def wrapperTemplateEngine = textTemplate.createTemplate(
             new File("src/main/resources/templates/wrapperEngine.groovy").getText("UTF-8"));
