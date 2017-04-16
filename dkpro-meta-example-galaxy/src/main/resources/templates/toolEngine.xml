@@ -18,7 +18,8 @@
 <tool xmlns:gsp='http://groovy.codehaus.org/2005/gsp' id="${engine.name}" name="${engine.name}" >
   <gsp:scriptlet>
     import org.jsoup.Jsoup;
-
+    import groovy.util.*;
+    
     def html2text(html) {
       return html ? Jsoup.parse(html).text() : "";
     }
@@ -50,7 +51,17 @@
       paramDecls.each { param ->
         def paramType = typeMap[param.type] ?: 'text';
         def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 
-    </gsp:scriptlet>
+	          	
+      	if (param.name.toLowerCase().contains('language')) {
+        	paramType = 'select';
+        } else if (param.name.toLowerCase().contains('modelvariant')) {
+       		paramType = 'select';
+       	} else if (param.name.toLowerCase().contains('encoding')) {
+       		return
+       	} else if (param.name.toLowerCase().contains('location')) {
+       		return
+       	} 
+      	</gsp:scriptlet>
         <param 
             name="${param.name}" 
             label="${param.name}" 
@@ -58,9 +69,37 @@
             optional="${!param.mandatory}"
             area="${param.multiValued}"
             value="${paramValue}"
-            help="${html2text(param.description)}">
-        </param>
-    <gsp:scriptlet>
+            help="${html2text(param.description)}"> 
+            <gsp:scriptlet>
+            if (param.name == 'language') {
+            	def langs = engine.languages as Set
+            	def langVarMap = [] 
+          		engine.models.each { model -> 
+          			def lang = (model.@language.text())
+          			def variant = (model.@variant.text())
+          			langs.add(lang)
+          			langVarMap.add([lang,variant])
+          		} 
+          		langs.each { lang ->
+			     	</gsp:scriptlet>
+			           	<option value="${lang}">$lang</option>
+			      	<gsp:scriptlet>
+			      	print langVarMap
+			     }
+           	 } else if (param.name == 'modelVariant') {
+           	 	def variants = [] as Set
+           			engine.models.each { model -> 
+           				variants.add((model.@variant.text()))
+           			} 
+           			variants.each { variant ->
+			     	</gsp:scriptlet>
+			           	<option value="${variant}">$variant</option>
+			      	<gsp:scriptlet>
+			     }
+           	 }
+  				</gsp:scriptlet>
+	        </param>
+	    	<gsp:scriptlet>
       }
     </gsp:scriptlet>
     <param name='hideOutput' type='boolean' label="hide logging info" checked="true"/>
