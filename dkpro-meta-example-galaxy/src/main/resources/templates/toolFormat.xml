@@ -19,7 +19,6 @@
     name="${format.name}">
   <gsp:scriptlet>
     import org.jsoup.Jsoup;
-
     def html2text(html) {
         return html ? Jsoup.parse(html).text() : "";
     }
@@ -60,6 +59,15 @@
       paramDecls.each { param ->
         def paramType = typeMap[param.type] ?: 'text';
         def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 
+      	
+      	if (param.name.toLowerCase() == 'language') {
+        	paramType = 'select';
+        } else if (param.name.toLowerCase().contains('encoding')) {
+       		return
+       	} else if (param.name.toLowerCase().contains('location')) {
+       		return
+       	}
+       	
   </gsp:scriptlet>
   <param 
       name="${param.name}"
@@ -68,10 +76,9 @@
       optional="${!param.mandatory}"
       area="${param.multiValued}"
       value="${paramValue}"
-      help="${html2text(param.description)}">
-  </param>
+      help="${html2text(param.description)}"/>
     <gsp:scriptlet>
-      }
+     }
     </gsp:scriptlet>
   <param name='hideOutput' type='boolean' label="hide logging info" checked="true" />
   </inputs>

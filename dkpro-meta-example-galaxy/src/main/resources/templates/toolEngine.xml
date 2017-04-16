@@ -18,7 +18,6 @@
 <tool xmlns:gsp='http://groovy.codehaus.org/2005/gsp' id="${engine.name}" name="${engine.name}" >
   <gsp:scriptlet>
     import org.jsoup.Jsoup;
-    import groovy.util.*;
     
     def html2text(html) {
       return html ? Jsoup.parse(html).text() : "";
@@ -52,46 +51,44 @@
         def paramType = typeMap[param.type] ?: 'text';
         def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 
 	          	
-      	if (param.name == 'language') {
+      	if (param.name.toLowerCase() == 'language') {
         	paramType = 'select';
  </gsp:scriptlet>
         <conditional name="modelVariant">
  <gsp:scriptlet>
-	        } else if (param.name.toLowerCase().contains('modelvariant')) {
-	       		return
-	       	} else if (param.name.toLowerCase().contains('encoding')) {
-	       		return
-	       	} else if (param.name.toLowerCase().contains('location')) {
-	       		return
-	       	} 
+        } else if (param.name.toLowerCase().contains('modelvariant')) {
+       		return
+       	} else if (param.name.toLowerCase().contains('encoding')) {
+       		return
+       	} else if (param.name.toLowerCase().contains('location')) {
+       		return
+       	} 
  </gsp:scriptlet>
-	        <param 
-	            name="${param.name}" 
-	            label="${param.name}" 
-	            type="${paramType}"
-	            optional="${!param.mandatory}"
-	            area="${param.multiValued}"
-	            value="${paramValue}"
-	            help="${html2text(param.description)}"> 
+        <param 
+            name="${param.name}" 
+            label="${param.name}" 
+            type="${paramType}"
+            optional="${!param.mandatory}"
+            area="${param.multiValued}"
+            value="${paramValue}"
+            help="${html2text(param.description)}"> 
  <gsp:scriptlet>
-	            if (param.name == 'language') {
-	            	def langs = engine.languages as Set
-	          		engine.models.each { model -> 
-	          			def lang = (model.@language.text())
-	          			langs.add(lang)
-	          			}
-	          		langs.each { lang ->
+            if (param.name.toLowerCase() == 'language') {
+            	def langs = engine.languages as Set
+          		engine.models.each { model -> 
+          			def lang = (model.@language.text())
+          			langs.add(lang)
+          			}
+          		langs.each { lang ->
  </gsp:scriptlet>
-				    	<option value="${lang}">$lang</option>
+			    	<option value="${lang}">$lang</option>
  <gsp:scriptlet>
-				     }
-				     <gsp:set var="bar" value="${langVarMap}" scope="page" />
-	           	 } 
+			     }
+           	 } 
  </gsp:scriptlet>
 		  	</param>
  <gsp:scriptlet>
 		  	if (param.name == 'language') {
-		  	
 		  		def langVarMap = [:] 
 	          		engine.models.each { model -> 
 	          			def lang = (model.@language.text())
@@ -106,14 +103,14 @@
 	          		}     
 		  		langVarMap.each { lang ->
  </gsp:scriptlet>
-			<when value="${lang.key}">
-				<param name="modelVariant" type="select" label="modelVariant">
+				<when value="${lang.key}">
+					<param name="modelVariant" type="select" label="modelVariant">
  <gsp:scriptlet>
- 					lang.value.each { variant -> 	
+ 						lang.value.each { variant -> 	
  </gsp:scriptlet>
-					<option value="${variant}">$variant</option>
+						<option value="${variant}">$variant</option>
  <gsp:scriptlet>
- 					}
+ 						}
  </gsp:scriptlet>
 				</param>
 			</when>
