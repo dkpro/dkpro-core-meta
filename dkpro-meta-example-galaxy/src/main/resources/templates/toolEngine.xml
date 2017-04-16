@@ -40,7 +40,7 @@
   <gsp:expression>"]]&gt;"</gsp:expression></command>
   <inputs>
     <param name='input' type='data' label="component"/>
-    <gsp:scriptlet>      
+ <gsp:scriptlet>      
       def paramValues = engine.spec.metaData.configurationParameterSettings.parameterSettings;
       def typeMap = [ 
         'Boolean': 'boolean',
@@ -52,56 +52,79 @@
         def paramType = typeMap[param.type] ?: 'text';
         def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 
 	          	
-      	if (param.name.toLowerCase().contains('language')) {
+      	if (param.name == 'language') {
         	paramType = 'select';
-        } else if (param.name.toLowerCase().contains('modelvariant')) {
-       		paramType = 'select';
-       	} else if (param.name.toLowerCase().contains('encoding')) {
-       		return
-       	} else if (param.name.toLowerCase().contains('location')) {
-       		return
-       	} 
-      	</gsp:scriptlet>
-        <param 
-            name="${param.name}" 
-            label="${param.name}" 
-            type="${paramType}"
-            optional="${!param.mandatory}"
-            area="${param.multiValued}"
-            value="${paramValue}"
-            help="${html2text(param.description)}"> 
-            <gsp:scriptlet>
-            if (param.name == 'language') {
-            	def langs = engine.languages as Set
-            	def langVarMap = [] 
-          		engine.models.each { model -> 
-          			def lang = (model.@language.text())
-          			def variant = (model.@variant.text())
-          			langs.add(lang)
-          			langVarMap.add([lang,variant])
-          		} 
-          		langs.each { lang ->
-			     	</gsp:scriptlet>
-			           	<option value="${lang}">$lang</option>
-			      	<gsp:scriptlet>
-			      	print langVarMap
-			     }
-           	 } else if (param.name == 'modelVariant') {
-           	 	def variants = [] as Set
-           			engine.models.each { model -> 
-           				variants.add((model.@variant.text()))
-           			} 
-           			variants.each { variant ->
-			     	</gsp:scriptlet>
-			           	<option value="${variant}">$variant</option>
-			      	<gsp:scriptlet>
-			     }
-           	 }
-  				</gsp:scriptlet>
-	        </param>
-	    	<gsp:scriptlet>
+ </gsp:scriptlet>
+        <conditional name="modelVariant">
+ <gsp:scriptlet>
+	        } else if (param.name.toLowerCase().contains('modelvariant')) {
+	       		return
+	       	} else if (param.name.toLowerCase().contains('encoding')) {
+	       		return
+	       	} else if (param.name.toLowerCase().contains('location')) {
+	       		return
+	       	} 
+ </gsp:scriptlet>
+	        <param 
+	            name="${param.name}" 
+	            label="${param.name}" 
+	            type="${paramType}"
+	            optional="${!param.mandatory}"
+	            area="${param.multiValued}"
+	            value="${paramValue}"
+	            help="${html2text(param.description)}"> 
+ <gsp:scriptlet>
+	            if (param.name == 'language') {
+	            	def langs = engine.languages as Set
+	          		engine.models.each { model -> 
+	          			def lang = (model.@language.text())
+	          			langs.add(lang)
+	          			}
+	          		langs.each { lang ->
+ </gsp:scriptlet>
+				    	<option value="${lang}">$lang</option>
+ <gsp:scriptlet>
+				     }
+				     <gsp:set var="bar" value="${langVarMap}" scope="page" />
+	           	 } 
+ </gsp:scriptlet>
+		  	</param>
+ <gsp:scriptlet>
+		  	if (param.name == 'language') {
+		  	
+		  		def langVarMap = [:] 
+	          		engine.models.each { model -> 
+	          			def lang = (model.@language.text())
+	          			def variant = (model.@variant.text())
+	          		def a = langVarMap.get(lang)       
+	                if (a) {
+	                    a.add(variant)
+	                    }
+	                else {
+	                    langVarMap.put(lang, [variant])
+	                    }
+	          		}     
+		  		langVarMap.each { lang ->
+ </gsp:scriptlet>
+			<when value="${lang.key}">
+				<param name="modelVariant" type="select" label="modelVariant">
+ <gsp:scriptlet>
+ 					lang.value.each { variant -> 	
+ </gsp:scriptlet>
+					<option value="${variant}">$variant</option>
+ <gsp:scriptlet>
+ 					}
+ </gsp:scriptlet>
+				</param>
+			</when>
+ <gsp:scriptlet>
+				}
+ </gsp:scriptlet>
+		</conditional>
+ <gsp:scriptlet>
+	 		}
       }
-    </gsp:scriptlet>
+ </gsp:scriptlet>
     <param name='hideOutput' type='boolean' label="hide logging info" checked="true"/>
   </inputs>
   <outputs>
