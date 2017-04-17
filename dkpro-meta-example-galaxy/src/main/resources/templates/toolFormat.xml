@@ -60,9 +60,9 @@
         def paramType = typeMap[param.type] ?: 'text';
         def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 
       	
-      	if ( param.name.toLowerCase().contains('encoding') || 
-        			param.name.toLowerCase().contains('location') ||
-       			    param.name == 'overwrite') {
+      	if (param.name.toLowerCase().contains('encoding') || 
+        	param.name.toLowerCase().contains('location') ||
+       	    param.name == 'overwrite') {
        		return
        	}
        	
