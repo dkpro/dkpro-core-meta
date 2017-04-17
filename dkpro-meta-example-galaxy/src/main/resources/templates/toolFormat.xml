@@ -60,13 +60,9 @@
         def paramType = typeMap[param.type] ?: 'text';
         def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 
       	
-      	if (param.name.toLowerCase() == 'language') {
-        	paramType = 'select';
-        } else if (param.name.toLowerCase().contains('encoding')) {
-       		return
-       	} else if (param.name.toLowerCase().contains('location')) {
-       		return
-       	} else if (param.name.toLowerCase().contains('overwrite')) {
+      	if ( param.name.toLowerCase().contains('encoding') || 
+        			param.name.toLowerCase().contains('location') ||
+       			    param.name == 'overwrite') {
        		return
        	}
        	
@@ -78,7 +74,10 @@
       optional="${!param.mandatory}"
       area="${param.multiValued}"
       value="${paramValue}"
-      help="${html2text(param.description)}"/>
+      help="${html2text(param.description)}">
+      
+      
+  </param>
     <gsp:scriptlet>
      }
     </gsp:scriptlet>

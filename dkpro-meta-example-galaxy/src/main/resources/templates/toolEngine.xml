@@ -51,18 +51,17 @@
         def paramType = typeMap[param.type] ?: 'text';
         def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 
 	          	
-      	if (param.name.toLowerCase() == 'language') {
-        	paramType = 'select';
+      	if (param.name == 'language') {
+      		if(engine.languages || engine.models) {
+        		paramType = 'select';
+        	}
  </gsp:scriptlet>
         <conditional name="modelVariant">
  <gsp:scriptlet>
-        } else if (param.name.toLowerCase().contains('modelvariant')) {
-       		return
-       	} else if (param.name.toLowerCase().contains('encoding')) {
-       		return
-       	} else if (param.name.toLowerCase().contains('location')) {
-       		return
-       	}  else if (param.name.toLowerCase().contains('overwrite')) {
+        } else if ( param.name == 'modelVariant' || 
+        			param.name.toLowerCase().contains('encoding') || 
+        			param.name.toLowerCase().contains('location') ||
+       			    param.name == 'overwrite') {
        		return
        	}
  </gsp:scriptlet>
@@ -75,20 +74,22 @@
             value="${paramValue}"
             help="${html2text(param.description)}"> 
  <gsp:scriptlet>
-            if (param.name.toLowerCase() == 'language') {
+            if (param.name == 'language') {
             	def langs = engine.languages as Set
           		engine.models.each { model -> 
           			def lang = (model.@language.text())
           			langs.add(lang)
           			}
-          		langs.each { lang ->
+          		if(langs) {
+          			langs.each { lang ->
  </gsp:scriptlet>
-			    	<option value="${lang}">$lang</option>
+			    		<option value="${lang}">$lang</option>
  <gsp:scriptlet>
+			     	}
 			     }
            	 } 
  </gsp:scriptlet>
-		  	</param>
+		</param>
  <gsp:scriptlet>
 		  	if (param.name == 'language') {
 		  		def langVarMap = [:] 
