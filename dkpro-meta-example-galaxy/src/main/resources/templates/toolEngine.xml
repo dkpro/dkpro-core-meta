@@ -52,7 +52,7 @@
         def paramValue = ( paramValues.find { it.name == param.name }?.value ) ?: ''; 
 	          	
       	if (param.name == 'language') {
-      		if(engine.languages.size() > 0 || engine.models.size() > 0) {
+      		if(!engine.languages.isEmpty() || !engine.models.isEmpty()) {
         		paramType = 'select';
         	}
  </gsp:scriptlet>
@@ -79,8 +79,8 @@
           		engine.models.each { model -> 
           			def lang = (model.@language.text())
           			langs.add(lang)
-          			}
-          		if(langs.size()>0) {
+          		}
+          		if (!langs.isEmpty()) {
           			langs.each { lang ->
  </gsp:scriptlet>
 			    		<option value="${lang}">$lang</option>
