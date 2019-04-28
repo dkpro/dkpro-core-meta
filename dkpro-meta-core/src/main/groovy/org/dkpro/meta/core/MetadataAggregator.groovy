@@ -425,7 +425,7 @@ class MetadataAggregator {
      */
     private Map scanDatasets(File aDirectory) {
         def datasets = [:];
-        def dsd = 'dkpro-core-api-datasets-asl/src/main/resources/de/tudarmstadt/ukp/dkpro/core/api/datasets/lib';
+        def dsd = 'dkpro-core-api-datasets-asl/src/main/resources/org/dkpro/core/api/datasets/lib';
         new File(aDirectory, dsd).eachFileRecurse(FILES) {
             if (it.path.endsWith('.yaml')) {
               def ds = it.withInputStream { new Yaml().load(it) };
