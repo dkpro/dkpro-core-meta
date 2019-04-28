@@ -53,7 +53,7 @@ class ContextHolder
             return binding.getVariables()['project']
         }
         else {
-            return null
+            return [ basedir: "." ];
         }
     }
     
