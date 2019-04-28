@@ -294,7 +294,10 @@ class MetadataAggregator {
                         .findAll { engine ->
                             def clazz = engine.spec.annotatorImplementationName;
                             def enginePack = clazz.substring(0, clazz.lastIndexOf('.'));
-                            enginePack == pack && !clazz.endsWith("Trainer");
+                            enginePack == pack ||
+                              // Handle change in DKPro Core package names
+                              enginePack.replace("org.dkpro.core", "de.tudarmstadt.ukp.dkpro.core") == pack && 
+                              !clazz.endsWith("Trainer");
                         };
                     def engine = candidates.find { engine ->
                             // There should be only one tool matching here - at least we don't have models
