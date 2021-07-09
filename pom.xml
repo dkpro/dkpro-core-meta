@@ -114,12 +114,12 @@
   </scm>
   <properties>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
-    <uima.version>3.1.1</uima.version>
-    <uimafit.version>3.1.0</uimafit.version>
-    <uimafit.plugin.version>3.1.0</uimafit.plugin.version>
+    <uima.version>3.2.0</uima.version>
+    <uimafit.version>3.2.0</uimafit.version>
+    <uimafit.plugin.version>${uimafit.version}</uimafit.plugin.version>
     <!-- The Spring version should be at least whatever uimaFIT requires -->
     <spring.version>4.3.30.RELEASE</spring.version>
-    <groovy.version>3.0.7</groovy.version>
+    <groovy.version>3.0.8</groovy.version>
   </properties>
   <modules>
     <module>dkpro-meta-core</module>

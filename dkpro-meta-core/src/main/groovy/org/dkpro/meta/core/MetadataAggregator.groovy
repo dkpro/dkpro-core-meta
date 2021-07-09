@@ -365,7 +365,7 @@ class MetadataAggregator {
                 def parts = it.name[0..-5].tokenize('-');
         
                 // Skip legacy default mappings that were only layer + language.
-                if (parts.size <= 2) {
+                if (parts.size() <= 2) {
                     return;
                 }
                 
