@@ -22,7 +22,7 @@ import groovy.io.FileType;
 import groovy.json.*;
 import groovy.text.XmlTemplateEngine
 import groovy.transform.Field
-import groovy.util.XmlParser
+import groovy.xml.XmlParser
 import java.nio.file.Files
 import org.dkpro.meta.core.MetadataAggregator;
 import org.dkpro.meta.core.model.MetadataModel;
